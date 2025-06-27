@@ -1,0 +1,10 @@
+source "https://rubygems.org"
+
+gem "roda"
+gem "sequel"
+gem "sqlite3"
+gem "dotenv"
+gem "telegram-bot-ruby"
+gem "rack"
+gem "http"
+gem "nokogiri"
