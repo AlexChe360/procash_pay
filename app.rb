@@ -83,4 +83,36 @@ class App < Roda
 
     puts "📤 Telegram уведомление: #{res.body}"
   end
+
+  route do |r|
+    r.on "whatsapp" do
+      
+      r.get do
+        if r.params["hub.mode"] == "subscribe" || r.params["hub.verify_token"] == ENV["WHATSAPP_VERIFY_TOKEN"]
+          r.params["hub.challenge"]
+        else
+          response.status = 403
+          "Forbidden"
+        end
+      end
+
+      r.post do
+        request_body = request.body.read
+        payload = JSON.parse(request_body)
+
+        messages = payload.dig("entry", 0, "changes", 0, "value", "messages")
+        from = messages&.dig(0, "from")
+        text = messages&.dig(0, "text", "body")
+
+        if from && text
+          result = WhatsappHandler.proccprocess_message(text, from)
+          result ? "✅ OK" : "⚠️ Error"
+        else
+          response.status = 400
+          "❌ Invalid WhatsApp payload"
+        end
+      end
+
+    end
+  end
 end
