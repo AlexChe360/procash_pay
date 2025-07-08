@@ -53,21 +53,24 @@
         const restaurantId = params.get("restaurantId");
         const tableNumber = params.get("tableNumber");
 
-        const tgBot = "procash_kz_bot"; // имя Telegram-бота без @
-        const waPhone = "77473169001"; // твой WhatsApp Business номер
+        const tgBot = "procash_kz_bot";
+        const waPhone = "77473169001";
 
         if (restaurantId && tableNumber) {
             const tgLink = `https://t.me/${tgBot}?start=restaurantId=${restaurantId}&tableNumber=${tableNumber}`;
-            const waLink = `https://wa.me/${waPhone}?text=restaurantId=${restaurantId}%20tableNumber=${tableNumber}`;
+
+            const meta = `${restaurantId}-${tableNumber}`;
+            const waText = encodeURIComponent(`👋 Открыть счёт для стола №${tableNumber}\nmeta=${meta}`);
+            const waLink = `https://wa.me/${waPhone}?text=${waText}`;
 
             document.getElementById("buttons").innerHTML = `
-        <a class="button telegram" href="${tgLink}" target="_blank">Telegram</a>
-        <a class="button whatsapp" href="${waLink}" target="_blank">WhatsApp</a>
-      `;
+                <a class="button telegram" href="${tgLink}" target="_blank">Telegram</a>
+                <a class="button whatsapp" href="${waLink}" target="_blank">WhatsApp</a>
+              `;
         } else {
             document.getElementById("buttons").innerHTML = `
-        <p>❌ Отсутствуют параметры <code>restaurantId</code> или <code>tableNumber</code> в URL</p>
-      `;
+                <p>❌ Отсутствуют параметры <code>restaurantId</code> или <code>tableNumber</code> в URL</p>
+              `;
         }
     </script>
 </body>

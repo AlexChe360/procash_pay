@@ -11,3 +11,9 @@ services:
     volumes:
       - .:/app
     restart: always
+  bot:
+    build: .
+    command: ruby services/telegram_bot.rb
+    env_file:
+      - .env
+    restart: always

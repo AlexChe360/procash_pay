@@ -4,9 +4,9 @@ require_relative "../services/whatsapp_service"
 
 class WhatsappHandler
   def self.process_message(message, from)
-    data = message.scan(/(\w+)=([\w\d]+)/).to_h
-    restaurant_id = data["restaurantId"]
-    table_number = data["tableNumber"]
+    meta = message[/meta=(\d+)-(\d+)/, 1..2]
+    restaurant_id = meta[0]
+    table_number  = meta[1]
 
     return false unless restaurant_id && table_number
 
