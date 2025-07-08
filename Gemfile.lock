@@ -68,6 +68,7 @@ GEM
     multipart-post (2.4.1)
     net-http (0.6.0)
       uri
+    nio4r (2.7.4)
     nokogiri (1.18.8)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -88,6 +89,8 @@ GEM
     nokogiri (1.18.8-x86_64-linux-musl)
       racc (~> 1.4)
     public_suffix (6.0.2)
+    puma (6.6.0)
+      nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.16)
     rake (13.3.0)
@@ -129,6 +132,7 @@ DEPENDENCIES
   dotenv
   http
   nokogiri
+  puma
   rack
   roda
   sequel

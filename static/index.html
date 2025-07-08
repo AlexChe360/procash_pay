@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Открыть счёт</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 16px 32px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+        }
+
+        .telegram {
+            background-color: #30a3ec;
+        }
+
+        .telegram:hover {
+            background-color: #2283c3;
+        }
+
+        .whatsapp {
+            background-color: #25D366;
+        }
+
+        .whatsapp:hover {
+            background-color: #1cb852;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Откройте счёт</h1>
+    <p>Выберите мессенджер, чтобы посмотреть заказ и оплатить</p>
+
+    <div id="buttons"></div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const restaurantId = params.get("restaurantId");
+        const tableNumber = params.get("tableNumber");
+
+        const tgBot = "procash_kz_bot"; // имя Telegram-бота без @
+        const waPhone = "77473169001"; // твой WhatsApp Business номер
+
+        if (restaurantId && tableNumber) {
+            const tgLink = `https://t.me/${tgBot}?start=restaurantId=${restaurantId}&tableNumber=${tableNumber}`;
+            const waLink = `https://wa.me/${waPhone}?text=restaurantId=${restaurantId}%20tableNumber=${tableNumber}`;
+
+            document.getElementById("buttons").innerHTML = `
+        <a class="button telegram" href="${tgLink}" target="_blank">Telegram</a>
+        <a class="button whatsapp" href="${waLink}" target="_blank">WhatsApp</a>
+      `;
+        } else {
+            document.getElementById("buttons").innerHTML = `
+        <p>❌ Отсутствуют параметры <code>restaurantId</code> или <code>tableNumber</code> в URL</p>
+      `;
+        }
+    </script>
+</body>
+
+</html>
