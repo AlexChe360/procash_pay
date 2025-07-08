@@ -1,5 +1,5 @@
 # puma.rb
-port ENV.fetch("PORT") { 3000 }
+port ENV.fetch("PORT") { 3100 }
 bind "tcp://0.0.0.0:3000"
 workers 0
 threads 1, 5

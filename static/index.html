@@ -39,6 +39,12 @@
         .whatsapp:hover {
             background-color: #1cb852;
         }
+
+        .button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
     </style>
 </head>
 
@@ -59,17 +65,22 @@
         if (restaurantId && tableNumber) {
             const tgLink = `https://t.me/${tgBot}?start=restaurantId=${restaurantId}&tableNumber=${tableNumber}`;
 
-            const meta = `${restaurantId}-${tableNumber}`;
-            const waText = encodeURIComponent(`👋 Открыть счёт для стола №${tableNumber}\nmeta=${meta}`);
-            const waLink = `https://wa.me/${waPhone}?text=${waText}`;
+            const message = encodeURIComponent(`Здравствуйте! Хочу оплатить счёт за стол №${tableNumber}.`);
+            const waLink = `https://wa.me/${waPhone}?text=${message}`;
 
             document.getElementById("buttons").innerHTML = `
-                <a class="button telegram" href="${tgLink}" target="_blank">Telegram</a>
-                <a class="button whatsapp" href="${waLink}" target="_blank">WhatsApp</a>
-              `;
+                <a class="button telegram" href="${tgLink}" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.05 16.49 9 20c.57 0 .83-.24 1.15-.52l2.77-2.57 5.79 4.27c.67.49 1.32.23 1.5-.6l2.72-12.92c.2-.93-.33-1.3-1.05-1.06L2.27 9.61c-.9.3-.9.88-.16 1.11l5.74 1.78L18.1 6.6c.31-.15.6 0 .36.2l-9.41 9.69z"/></svg>
+                Telegram
+                </a>
+                <a class="button whatsapp" href="${waLink}" target="_blank">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M16.003 3.2a12.8 12.8 0 00-11.14 18.966L2.9 28.133l6.2-1.963a12.8 12.8 0 106.903-22.97zm0 23.467a10.666 10.666 0 01-5.44-1.48l-.39-.23-3.668.968.987-3.584-.25-.37a10.635 10.635 0 1118.18-2.07 10.63 10.63 0 01-9.42 7.76zM23.24 19.37c-.3-.15-1.762-.867-2.034-.97-.27-.1-.465-.15-.66.15s-.76.97-.93 1.17c-.17.2-.34.22-.64.08-.3-.15-1.26-.46-2.4-1.46a8.9 8.9 0 01-1.65-2.06c-.17-.3-.02-.46.13-.6.13-.13.3-.34.45-.5.15-.16.2-.27.3-.46.1-.2.05-.37 0-.52-.05-.15-.67-1.61-.92-2.2-.25-.58-.5-.5-.67-.5h-.57c-.17 0-.45.07-.68.34-.23.27-.9.88-.9 2.15 0 1.27.92 2.49 1.05 2.66.13.17 1.8 2.9 4.38 4.07 1.63.7 2.28.76 3.1.64.5-.07 1.56-.63 1.78-1.24.23-.6.23-1.12.16-1.24-.07-.12-.26-.2-.56-.34z"/></svg>
+                WhatsApp
+                </a>
+            `;
         } else {
             document.getElementById("buttons").innerHTML = `
-                <p>❌ Отсутствуют параметры <code>restaurantId</code> или <code>tableNumber</code> в URL</p>
+                <p>❌ Не удалось определить ваш стол. Пожалуйста, отсканируйте QR-код заново или обратитесь к официанту.</p>
               `;
         }
     </script>

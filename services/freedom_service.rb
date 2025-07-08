@@ -2,14 +2,14 @@ require "securerandom"
 require "digest"
 require "net/http"
 require "uri"
-require "nakogiri"
+require "nokogiri"
 
 class FreedomService
     def self.generate_url(amount:, description:)
         test_mode = ENV["PAYMENT_TEST_MODE"] == "true"
 
         merchant_id = test_mode ? ENV["TEST_MERCHANT_ID"] : ENV["MERCHANT_ID"]
-        secret_key = test_mode ? ENV["TEST_PAYMENT_SECRET_KEY"] : ENV ["PAYMENT_SECRET_KEY"]
+        secret_key = test_mode ? ENV["TEST_PAYMENT_SECRET_KEY"] : ENV["PAYMENT_SECRET_KEY"]
         user_id = ENV["USER_ID"]
 
         raise "Missing merchant_id or secret_key" unless merchant_id && secret_key

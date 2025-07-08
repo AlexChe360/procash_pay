@@ -26,9 +26,14 @@ class App < Roda
   plugin :static, ["/static"], root: File.expand_path(".")
 
   route do |r|
-    # HTML для выбора мессенджера
     r.root do
-      File.read("static/index.html")
+      response["Content-Type"] = "text/html"
+      begin
+        File.read("static/index.html")
+      rescue => e
+        response.status = 500
+        "Ошибка загрузки index.html: #{e.message}"
+      end
     end
 
     r.get "privacy" do
@@ -43,7 +48,7 @@ class App < Roda
         required = %w[order_guid receipt_url chat_id]
         unless required.all? { |k| payload[k] && !payload[k].to_s.strip.empty? }
           response.status = 400
-          next { error: "Missing required fields" }
+          next({ error: "Missing required fields" }.to_json)
         end
 
         # Сохраняем в SQLite
@@ -61,34 +66,14 @@ class App < Roda
           receipt_url: payload["receipt_url"]
         )
 
-        { status: "ok", message: "Оплата принята" }
+        { status: "ok", message: "Оплата принята" }.to_json
 
       rescue => e
         response.status = 500
-        { error: "Callback failed: #{e.message}" }
+        { error: "Callback failed: #{e.message}" }.to_json
       end
     end
-  end
 
-  # Отправка сообщения в Telegram
-  def send_thank_you_message(chat_id:, order_guid:, receipt_url:)
-    token = ENV["TELEGRAM_BOT_TOKEN"]
-    uri = URI("https://api.telegram.org/bot#{token}/sendMessage")
-
-    message = <<~TEXT
-      ✅ Спасибо за оплату заказа №#{order_guid}!
-      💳 Ваш чек: #{receipt_url}
-    TEXT
-
-    res = Net::HTTP.post_form(uri, {
-      "chat_id" => chat_id,
-      "text"    => message.strip
-    })
-
-    puts "📤 Telegram уведомление: #{res.body}"
-  end
-
-  route do |r|
     r.on "whatsapp" do
       
       r.get do
@@ -118,5 +103,23 @@ class App < Roda
       end
 
     end
+  end
+
+  # Отправка сообщения в Telegram
+  def send_thank_you_message(chat_id:, order_guid:, receipt_url:)
+    token = ENV["TELEGRAM_BOT_TOKEN"]
+    uri = URI("https://api.telegram.org/bot#{token}/sendMessage")
+
+    message = <<~TEXT
+      ✅ Спасибо за оплату заказа №#{order_guid}!
+      💳 Ваш чек: #{receipt_url}
+    TEXT
+
+    res = Net::HTTP.post_form(uri, {
+      "chat_id" => chat_id,
+      "text"    => message.strip
+    })
+
+    puts "📤 Telegram уведомление: #{res.body}"
   end
 end

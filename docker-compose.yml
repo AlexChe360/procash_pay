@@ -5,7 +5,7 @@ services:
     build: .
     container_name: procash
     ports:
-      - "3000:3000"
+      - "3100:3100"
     env_file:
       - .env
     volumes:
@@ -13,7 +13,9 @@ services:
     restart: always
   bot:
     build: .
-    command: ruby services/telegram_bot.rb
+    command: ruby bot/telegram_bot.rb
     env_file:
       - .env
+    volumes:
+      - .:/app
     restart: always
