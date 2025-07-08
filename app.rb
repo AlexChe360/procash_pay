@@ -4,6 +4,7 @@ require "sequel"
 require "dotenv/load"
 require "net/http"
 require "uri"
+require_relative "./handlers/whatsapp_handler"
 
 # Инициализация SQLite
 DB = Sequel.sqlite("procash.db")
@@ -22,6 +23,7 @@ end
 
 class App < Roda
   plugin :json
+  plugin :render
   plugin :request_headers
   plugin :static, ["/static"], root: File.expand_path(".")
 
@@ -85,22 +87,47 @@ class App < Roda
         end
       end
 
-      r.post do
-        request_body = request.body.read
-        payload = JSON.parse(request_body)
+     r.post do
+  begin
+    request_body = request.body.read
+    payload = JSON.parse(request_body)
 
-        messages = payload.dig("entry", 0, "changes", 0, "value", "messages")
-        from = messages&.dig(0, "from")
-        text = messages&.dig(0, "text", "body")
+    # Логируем весь входящий payload для отладки
+    puts "📥 WhatsApp payload:"
+    puts JSON.pretty_generate(payload)
 
-        if from && text
-          result = WhatsappHandler.proccprocess_message(text, from)
-          result ? "✅ OK" : "⚠️ Error"
-        else
-          response.status = 400
-          "❌ Invalid WhatsApp payload"
-        end
-      end
+    messages = payload.dig("entry", 0, "changes", 0, "value", "messages")
+
+    if messages.nil? || messages.empty?
+      response.status = 400
+      puts "⚠️ Нет сообщений в payload"
+      next "❌ Нет сообщений"
+    end
+
+    from = messages.dig(0, "from")
+    text = messages.dig(0, "text", "body")
+
+    if from && text
+      puts "👤 Получено сообщение от #{from}: #{text.inspect}"
+      result = WhatsappHandler.process_message(text, from)
+      result ? "✅ OK" : "⚠️ Обработка не удалась"
+    else
+      response.status = 400
+      puts "❌ Не удалось найти from или text"
+      "❌ Неверная структура сообщения"
+    end
+
+  rescue JSON::ParserError => e
+    response.status = 400
+    puts "❌ Ошибка парсинга JSON: #{e.message}"
+    "❌ Некорректный JSON"
+
+  rescue => e
+    response.status = 500
+    puts "❌ Внутренняя ошибка сервера: #{e.message}"
+    "❌ Ошибка обработки сообщения"
+  end
+end
 
     end
   end

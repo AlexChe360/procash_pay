@@ -113,6 +113,7 @@ GEM
       faraday (~> 2.0)
       faraday-multipart (~> 1.0)
       zeitwerk (~> 2.6)
+    tilt (2.6.1)
     uri (1.0.3)
     zeitwerk (2.7.3)
 
@@ -138,6 +139,7 @@ DEPENDENCIES
   sequel
   sqlite3
   telegram-bot-ruby
+  tilt
 
 BUNDLED WITH
    2.6.7

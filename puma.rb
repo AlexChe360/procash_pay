@@ -1,7 +1,6 @@
 # puma.rb
-port ENV.fetch("PORT") { 3100 }
-bind "tcp://0.0.0.0:3000"
+port ENV.fetch("PORT") { 3001 }
 workers 0
 threads 1, 5
-environment ENV.fetch("RACK_ENV") { "development" }
+environment ENV.fetch("RACK_ENV") { "production" }
 

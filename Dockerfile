@@ -17,7 +17,7 @@ RUN gem install bundler && bundle install
 COPY . .
 
 # Пробрасываем порт
-EXPOSE 3000
+EXPOSE 3001
 
 # Команда запуска Puma
 CMD ["bundle", "exec", "puma", "-C", "puma.rb"]

@@ -65,7 +65,7 @@
         if (restaurantId && tableNumber) {
             const tgLink = `https://t.me/${tgBot}?start=restaurantId=${restaurantId}&tableNumber=${tableNumber}`;
 
-            const message = encodeURIComponent(`Здравствуйте! Хочу оплатить счёт за стол №${tableNumber}.`);
+            const message = encodeURIComponent(`Оплатить счёт за стол №${tableNumber}.`);
             const waLink = `https://wa.me/${waPhone}?text=${message}`;
 
             document.getElementById("buttons").innerHTML = `
