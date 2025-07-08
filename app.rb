@@ -31,6 +31,10 @@ class App < Roda
       File.read("static/index.html")
     end
 
+    r.get "privacy" do
+      view("privacy")
+    end
+
     # Callback от FreedomPay
     r.post "callback" do
       begin

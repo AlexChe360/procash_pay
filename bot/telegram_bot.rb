@@ -25,9 +25,9 @@ Telegram::Bot::Client.run(ENV["TELEGRAM_BOT_TOKEN"]) do |bot|
       text += "🧑‍🍳 Официант: #{waiter_name}\n"
       text += "🍽 Заказ:\n"
       order[:items].each do |item|
-        text += "- #{item[:name]} x#{item[:quantity]} = #{item[:amount]}₸\n"
+        text += "- #{item[:name]} #{item[:quantity]} = #{item[:amount]}₸\n"
       end
-      text += "💰 Итого: #{order[:total_sum]}₸"
+      text += "🧾 Итого: #{order[:total_sum]}₸"
 
       # Генерация платёжной ссылки
       payment_result = FreedomService.generate_url(
